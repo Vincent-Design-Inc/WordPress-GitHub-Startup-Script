@@ -18,6 +18,7 @@ This script automates the process of setting up a new theme using our starter wi
 1. Ensure you have the following prerequisites installed on your system:
    - Git
    - GitHub CLI (`gh`)
+     - Make sure you have authorized github cli using `gh auth login`
 
 2. Save the script to a file, e.g., `setup.sh`, in your project themes directory and make it executable:
    `chmod +x setup.sh`
