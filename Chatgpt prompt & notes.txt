@@ -1,0 +1,8 @@
+I want to create a bash shell script that accomplishes the following tasks.  It should include robust error checking.
+
+1. Create a folder in the curent directory based on a prompt if a name is not passed as an argument.  The input should be lower case, and use dashes for spaces.
+2. Clone git@github.com:Vincent-Design-Inc/starter-theme-3.git into the new folder.
+3. Enter the new folder and update the line that contains the text "Theme Name:" in style.css based on a prompt if a name is not passed as an argument.  The input should be title case and may contain spaces.
+4. Create a new repository on github using the github cli based on step 3
+5. Change the remote repository URL to the new repo on github
+6. Perform an initial commit and push to the new repository
