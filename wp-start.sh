@@ -45,7 +45,7 @@ else
 fi
 
 # Update style.css with the Theme Name
-sed -i "s/Theme Name:.*/Theme Name: $theme_name/" style.css
+sed -i '' "s/Theme Name:.*/Theme Name: $theme_name/" style.css
 
 # Step 4: Create a new GitHub repository using GitHub CLI
 gh repo create "$org_name/$folder_name" --private
