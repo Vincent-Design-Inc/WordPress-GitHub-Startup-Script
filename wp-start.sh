@@ -61,4 +61,9 @@ git add .
 git commit -m "$initial_commit_message"
 git push -u origin main
 
+# Step 7: Set up development dependencies
+composer install
+yarn install
+yarn build
+
 echo "Setup completed successfully."
