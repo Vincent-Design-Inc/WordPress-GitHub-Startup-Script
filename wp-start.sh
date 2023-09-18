@@ -51,7 +51,12 @@ gh repo create "Vincent-Design-Inc/$folder_name" --private
 # Step 5: Change the remote repository URL
 git remote set-url origin "git@github.com:Vincent-Design-Inc/$folder_name.git"
 
-# Step 6: Perform an initial commit with date and time in the message
+# Step 6: Set up development dependencies
+composer install
+yarn install
+yarn build
+
+# Step 7: Perform an initial commit with date and time in the message
 current_date_time=$(date +"%Y-%m-%d %H:%M:%S")
 initial_commit_message="Initial commit - $current_date_time"
 
@@ -59,9 +64,15 @@ git add .
 git commit -m "$initial_commit_message"
 git push -u origin main
 
-# Step 7: Set up development dependencies
-composer install
-yarn install
-yarn build
-
 echo "Setup completed successfully."
+
+# Step 8: Ask the user if they want to open the project in Visual Studio Code
+read -p "Do you want to open the project in Visual Studio Code? (y/n): " open_vscode
+if [ "$open_vscode" == "y" ] || [ "$open_vscode" == "Y" ]; then
+    if command -v code &> /dev/null; then
+        # The 'code' command-line tool is available
+        code .
+    else
+        echo "Visual Studio Code (code) is not installed or not in your PATH. Please open the project manually in VS Code."
+    fi
+fi

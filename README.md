@@ -12,30 +12,26 @@ This script automates the process of setting up a new theme using our starter wi
 
 5. Changes the remote repository URL to the newly-created GitHub repository.
 
-6. Performs an initial commit with a commit message that includes the date and time of the commit.
+6. Installs development dependencies with composer and yarn, and performs the initial `yarn build`.
+
+7. Performs an initial commit with a commit message that includes the date and time of the commit.
+
+8. (Optional) Open the theme in VSCode via the `code` command line tool.  The script will let you know if it's not available.
+
 
 ## Usage
-1. Ensure you have the following prerequisites installed on your system:
+1. Ensure you have the following prerequisites installed on your system (the script will check to make sure they are installed):
    - Git
    - GitHub CLI (`gh`)
-     - Make sure you have authorized github cli using `gh auth login`
+     - **Make sure you have authorized GitHub CLI using `gh auth login`**
 
-2. Save the script to a file, e.g., `setup.sh`, in your project themes directory and make it executable:
-   `chmod +x setup.sh`
+2. Save the script to a file, e.g., `wp-start.sh`, in your project themes directory and make it executable:
+   `chmod +x wp-start.sh`
 
     Run the script:
-    `./setup.sh [FOLDER_NAME] [THEME_NAME]`
+    `./wp-start.sh [FOLDER_NAME] [THEME_NAME]`
 
-        FOLDER_NAME (optional): Specify the desired folder name (lowercase with dashes for spaces) for your project. If not provided, you will be prompted to enter the folder name.
-        THEME_NAME (optional): Specify the desired Theme Name (title case) for your project. If not provided, you will be prompted to enter the Theme Name.
+    If you do not provide a folder or theme name, the script will prompt you to enter a folder name.
 
-    Follow the prompts to enter folder and theme names if not provided as arguments.
-
-    The script will create the folder, clone the starter theme repository, update the style.css file, create a new GitHub repository, set the remote URL, and perform an initial commit.
-
-    You will be prompted for any necessary inputs during the script execution.
-
-    Your project is now set up on GitHub, and the initial commit is pushed to the repository.
-
-Happy coding!
-
+    **FOLDER_NAME (optional):** Specify the desired folder name (lowercase with dashes for spaces) for your project.
+    **THEME_NAME (optional):** Specify the desired Theme Name (title case) for your project.
