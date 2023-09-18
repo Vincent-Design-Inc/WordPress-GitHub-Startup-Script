@@ -13,8 +13,6 @@ function prompt_with_default {
     echo "${value:-$default}"
 }
 
-org_name="Vincent-Design-Inc"  # Organization name, used in repo creation steps
-
 # Step 1: Create a folder in the current directory
 if [ $# -eq 0 ]; then
     folder_name=$(prompt_with_default "Enter folder name (lowercase with dashes for spaces)" "my-theme-folder")
@@ -48,10 +46,10 @@ fi
 sed -i '' "s/Theme Name:.*/Theme Name: $theme_name/" style.css
 
 # Step 4: Create a new GitHub repository using GitHub CLI
-gh repo create "$org_name/$folder_name" --private
+gh repo create "Vincent-Design-Inc/$folder_name" --private
 
 # Step 5: Change the remote repository URL
-git remote set-url origin "git@github.com:$org_name/$folder_name.git"
+git remote set-url origin "git@github.com:Vincent-Design-Inc/$folder_name.git"
 
 # Step 6: Perform an initial commit with date and time in the message
 current_date_time=$(date +"%Y-%m-%d %H:%M:%S")
