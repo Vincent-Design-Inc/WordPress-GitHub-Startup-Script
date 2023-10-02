@@ -23,6 +23,7 @@ This script automates the process of setting up a new theme using our starter wi
 1. Ensure you have the following prerequisites installed on your system (the script will check to make sure they are installed):
    - Git
    - GitHub CLI (`gh`)
+     - **If you need GitHub CLI, install it with Homebrew: `brew install gh`**
      - **Make sure you have authorized GitHub CLI using `gh auth login`**
 
 2. Save the script to a file, e.g., `wp-start.sh`, in your project themes directory and make it executable:
