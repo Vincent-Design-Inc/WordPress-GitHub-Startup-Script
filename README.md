@@ -14,7 +14,7 @@ This script automates the process of setting up a new theme using our starter wi
 
 6. Installs development dependencies with composer and yarn, and performs the initial `yarn build`.
 
-7. Performs an initial commit with a commit message that includes the date and time of the commit.
+7. Performs an initial commit with a commit message that includes the date and time of the commit, and sets up repository secrets for GitHub Actions.
 
 8. (Optional) Open the theme in VSCode via the `code` command line tool.  The script will let you know if it's not available.
 
