@@ -35,6 +35,8 @@ cd "$folder_name"
 # Step 2: Clone the GitHub repository
 git clone git@github.com:Vincent-Design-Inc/starter-theme-3.git .
 
+echo "---------------------------------------------"
+
 # Step 3: Update style.css with the Theme Name
 if [ $# -lt 2 ]; then
     theme_name=$(prompt_with_default "Enter Theme Name (Title Case with spaces)" "My Theme")
@@ -48,23 +50,44 @@ sed -i '' "s/Theme Name:.*/Theme Name: $theme_name/" style.css
 # Step 4: Create a new GitHub repository using GitHub CLI
 gh repo create "Vincent-Design-Inc/$folder_name" --private
 
+echo "---------------------------------------------"
+
 # Step 5: Change the remote repository URL
 git remote set-url origin "git@github.com:Vincent-Design-Inc/$folder_name.git"
+
+echo "---------------------------------------------"
 
 # Step 6: Set up development dependencies
 composer install
 yarn install
 yarn build
 
-# Step 7: Perform an initial commit with date and time in the message
+echo "---------------------------------------------"
+
+# Step 7: Perform an initial commit with date and time in the message, and set up repository secrets
 current_date_time=$(date +"%Y-%m-%d %H:%M:%S")
 initial_commit_message="Initial commit - $current_date_time"
 
+# Step 7a: Set up initial commit
 git add .
 git commit -m "$initial_commit_message"
 git push -u origin main
 
+echo "---------------------------------------------"
+
+# Step 7b: Set up repository secrets
+echo "Setting REMOTE_TARGET to /www/wp-content/themes/$folder_name/"
+gh secret set REMOTE_TARGET --body "/www/wp-content/themes/$folder_name/"
+echo "Adding REMOTE_USER. Set this on GitHub once ready to start deploying"
+gh secret set REMOTE_USER --body "org+vincent-design+"
+echo "Setting PHP_VERSION to 8.1.  Change on GitHub if needed"
+gh secret set PHP_VERSION --body "8.1"
+
+echo "---------------------------------------------"
+
 echo "Setup completed successfully."
+
+echo "---------------------------------------------"
 
 # Step 8: Ask the user if they want to open the project in Visual Studio Code
 read -p "Do you want to open the project in Visual Studio Code? (y/n): " open_vscode
@@ -73,6 +96,6 @@ if [ "$open_vscode" == "y" ] || [ "$open_vscode" == "Y" ]; then
         # The 'code' command-line tool is available
         code .
     else
-        echo "Visual Studio Code (code) is not installed or not in your PATH. Please open the project manually in VS Code."
+        echo "Visual Studio Code (code) is not installed or not in your $PATH. Please open the project manually in VS Code."
     fi
 fi
