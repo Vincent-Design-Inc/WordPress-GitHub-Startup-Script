@@ -2,7 +2,23 @@
 
 # Check if the required commands are available
 command -v git >/dev/null 2>&1 || { echo >&2 "Git is not installed. Please install Git before running this script."; exit 1; }
-command -v gh >/dev/null 2>&1 || { echo >&2 "GitHub CLI (gh) is not installed. Please install GitHub CLI before running this script."; exit 1; }
+
+# Check for GitHub CLI (gh) and offer to install it using Homebrew
+if !command -v gh &> /dev/null; then
+    read -p "GitHub CLI (gh) is not installed. Do you want to install it using Homebrew? (y/n): " install_gh
+
+    if [ "$install_gh" == "y" ] || [ "$install_gh" == "Y" ]; then
+        if command -v brew &> /dev/null; then
+            brew install gh
+        else
+            echo "Homebrew is not installed. Please install Homebrew and then run 'brew install gh' to install GitHub CLI."
+            exit 1
+        fi
+    else
+        echo "GitHub CLI (gh) is required to run this script. Please install it and try again."
+        exit 1
+    fi
+fi
 
 # Function to prompt for input with a default value
 function prompt_with_default {
