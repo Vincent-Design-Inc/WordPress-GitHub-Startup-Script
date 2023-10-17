@@ -32,7 +32,7 @@ This script automates the process of setting up a new theme using our starter wi
    `chmod +x wp-start.sh`
 
     Run the script:
-    `./wp-start.sh folder_name "Theme"`
+    `./wp-start.sh folder_name "Theme Name"`
 
     If you do not provide a folder or theme name, the script will prompt you to enter a folder name.
 
