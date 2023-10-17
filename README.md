@@ -1,4 +1,4 @@
-# GitHub Repository Setup Script
+# VDI WordPress GitHub Dev Setup Script
 
 This script automates the process of setting up a new theme using our starter with a GitHub repository for WordPress projects. It performs the following tasks:
 
