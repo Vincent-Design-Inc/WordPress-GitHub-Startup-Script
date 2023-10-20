@@ -19,7 +19,9 @@ This script automates the process of setting up a new theme using our starter wi
    - `PHP_VERSION` is set to 8.1 (since the starter requires it).  Edit this secret in the repo settings if you need to change it.
    - You will need to update the `REMOTE_USER` secret in the repo settings once you're ready to start deploying via the actions workflow.
 
-8. (Optional) Open the theme in VSCode via the `code` command line tool.  The script will let you know if it's not available.
+8. Figures out what settings to use to apply environment variables for plugin install in the Local container.
+
+9. (Optional) Open the theme in VSCode via the `code` command line tool.  The script will let you know if it's not available.
 
 ## Usage
 1. Ensure you have the following prerequisites installed on your system (the script will check to make sure they are installed):
