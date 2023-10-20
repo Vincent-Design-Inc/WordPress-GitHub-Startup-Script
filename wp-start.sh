@@ -53,7 +53,7 @@ git clone git@github.com:Vincent-Design-Inc/starter-theme-3.git .
 
 echo "---------------------------------------------"
 
-# Step 3: Update style.css with the Theme Name
+# Step 3: Update style.css and bud.config.js with the theme information
 if [ $# -lt 2 ]; then
     theme_name=$(prompt_with_default "Enter Theme Name (Title Case with spaces)" "My Theme")
 else
@@ -62,6 +62,9 @@ fi
 
 # Update style.css with the Theme Name
 sed -i '' "s/Theme Name:.*/Theme Name: $theme_name/" style.css
+
+# Update bud.config.js with the Foldere Name
+sed -i '' "s#app.setPublicPath('.*')#app.setPublicPath('/wp-content/themes/$folder_name/public/')#" bud.config.js
 
 # Step 4: Create a new GitHub repository using GitHub CLI
 gh repo create "Vincent-Design-Inc/$folder_name" --private

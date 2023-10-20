@@ -6,7 +6,7 @@ This script automates the process of setting up a new theme using our starter wi
 
 2. Clones the [starter-theme-3](https://github.com/Vincent-Design-Inc/starter-theme-3) repository from GitHub into the newly created folder.
 
-3. Updates the `style.css` file with the Theme Name based on user input (or a default name if none is provided). The Theme Name is converted to title case.
+3. Updates the `style.css` file with the Theme Name based on user input (or a default name if none is provided). The Theme Name is converted to title case.  Also updates the `app.setPublicPath` function in `bud.config.js` to point to the newly-created folder.
 
 4. Creates a new GitHub repository under our GitHub organization.
 
@@ -38,3 +38,12 @@ This script automates the process of setting up a new theme using our starter wi
 
     - **folder_name (optional):** Specify the desired folder name (lowercase with dashes for spaces) for your project.
     - **"Theme Name" (optional):** Specify the desired Theme Name (title case) for your project.
+
+## Changelog
+
+### 2023-10-20
+#### Added
+- Added step to update `bud.config.js` with the new theme folder as the public path (`app.setPublicPath`)
+
+#### Changed
+#### Fixed
