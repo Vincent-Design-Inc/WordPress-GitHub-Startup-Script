@@ -29,6 +29,74 @@ function prompt_with_default {
     echo "${value:-$default}"
 }
 
+# Function to set up the proper environment variables and run the plugin install script
+install_plugins() {
+    local input_string="$1"
+    local search_folder="$HOME/Library/Application Support/Local/ssh-entry"
+
+    # Split the string into an array based on dashes or underscores
+    IFS="-_" read -ra parts <<< "$input_string"
+
+    # Create an array to store matching files
+    local matching_files=()
+
+    # Create an associative array to store both filename and CD paths
+    local filenames=()
+    local cd_paths=()
+
+    # Loop through each part of the split string and search for files
+    for part in "${parts[@]}"; do
+        # Use grep to search for files containing the string and add them to the matching_files array
+        files_containing_part=$(grep -ril "$part" "$search_folder")
+        matching_files+=("$files_containing_part")
+    done
+
+    # Deduplicate the list of matching files
+    matching_files=($(echo "${matching_files[@]}" | tr ' ' '\n' | sort -u))
+
+    # Loop through each matching file
+    for file in "${matching_files[@]}"; do
+        if [[ "$file" == *".sh" ]]; then
+            # Extract the filename without the path and .sh extension
+            filename=$(basename "$file" .sh)
+
+            cd "$search_folder"
+
+            cd_line=$(grep -m 1 "cd " "$filename.sh")
+
+            if [ -n "$cd_line" ]; then
+                # Extract the path from the cd line
+                path=$(echo "$cd_line" | awk -F 'cd ' '{print $2}' | tr -d '"')
+
+                # Store the filename and the path in their respective arrays
+                filenames+=("$filename")
+                cd_paths+=("$path")
+            fi
+        fi
+    done
+
+    export MYSQL_HOME="$HOME/Library/Application Support/Local/run/$filenames/conf/mysql"
+    export PHPRC="$HOME/Library/Application Support/Local/run/$filenames/conf/php"
+    export WP_CLI_CONFIG_PATH="/Applications/Local.app/Contents/Resources/extraResources/bin/wp-cli/config.yaml"
+    export WP_CLI_DISABLE_AUTO_CHECK_UPDATE=1
+    export PATH="$HOME/Library/Application Support/Local/lightning-services/mysql-8.0.16+6/bin/darwin/bin:$PATH"
+    export PATH="$HOME/Library/Application Support/Local/lightning-services/php-8.1.23+0/bin/darwin/bin:$PATH"
+    export PATH="/Applications/Local.app/Contents/Resources/extraResources/bin/wp-cli/posix:$PATH"
+    export PATH="/Applications/Local.app/Contents/Resources/extraResources/bin/composer/posix:$PATH"
+    export MAGICK_CODER_MODULE_PATH="$HOME/Library/Application Support/Local/lightning-services/php-8.1.23+0/bin/darwin/ImageMagick/modules-Q16/coders"
+
+    cd "$cd_paths"
+    # Update wp-config.php with the proper mysql host
+    sed -i '' "s#define( 'DB_HOST', '.*' )#define( 'DB_HOST', '$HOME/Library/Application Support/Local/run/$filenames/mysql/mysqld.sock' )#" wp-config.php
+
+    cd "$cd_paths/wp-content/themes/$input_string"
+    "./plugins.sh"
+
+    cd "$cd_paths"
+    # Revert wp-config.php change
+    sed -i '' "s#define( 'DB_HOST', '.*' )#define( 'DB_HOST', 'localhost' )#" wp-config.php
+}
+
 # Step 1: Create a folder in the current directory
 if [ $# -eq 0 ]; then
     folder_name=$(prompt_with_default "Enter folder name (lowercase with dashes for spaces)" "my-theme-folder")
@@ -101,6 +169,13 @@ echo "Adding REMOTE_USER. Set this on GitHub once ready to start deploying"
 gh secret set REMOTE_USER --body "org+vincent-design+"
 echo "Setting PHP_VERSION to 8.1.  Change on GitHub if needed"
 gh secret set PHP_VERSION --body "8.1"
+
+echo "---------------------------------------------"
+
+# Step 7c: Install plugins
+echo "Installing plugins"
+cd "$HOME/Local Sites"
+install_plugins "$folder_name"
 
 echo "---------------------------------------------"
 

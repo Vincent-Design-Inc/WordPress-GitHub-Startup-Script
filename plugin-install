@@ -9,7 +9,7 @@
 # We well then try to use this to spawn a shell for that site so we can have access
 # to the database and wp-cli, so we can automate our plugin install.
 
-search_files() {
+install_plugins() {
     local input_string="$1"
     local search_folder="$HOME/Library/Application Support/Local/ssh-entry"
 
@@ -53,11 +53,6 @@ search_files() {
         fi
     done
 
-    # Print the list of filenames without .sh extension and the corresponding path
-    # for ((i=0; i<${#filenames[@]}; i++)); do
-    #     echo "File: ${filenames[i]}, CD Path: ${cd_paths[i]}"
-    # done
-
     export MYSQL_HOME="$HOME/Library/Application Support/Local/run/$filenames/conf/mysql"
     export PHPRC="$HOME/Library/Application Support/Local/run/$filenames/conf/php"
     export WP_CLI_CONFIG_PATH="/Applications/Local.app/Contents/Resources/extraResources/bin/wp-cli/config.yaml"
@@ -80,4 +75,4 @@ search_files() {
     sed -i '' "s#define( 'DB_HOST', '.*' )#define( 'DB_HOST', 'localhost' )#" wp-config.php
 }
 
-search_files "$1"
+install_plugins "$1"
