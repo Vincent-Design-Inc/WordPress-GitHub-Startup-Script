@@ -1,0 +1,83 @@
+#!/bin/bash
+
+# Find Local SSH definition script
+#
+# Author: Keith Solomon
+#
+# Description:
+# This is an attempt to find the SSH definition script for a given site in Local.
+# We well then try to use this to spawn a shell for that site so we can have access
+# to the database and wp-cli, so we can automate our plugin install.
+
+search_files() {
+    local input_string="$1"
+    local search_folder="$HOME/Library/Application Support/Local/ssh-entry"
+
+    # Split the string into an array based on dashes or underscores
+    IFS="-_" read -ra parts <<< "$input_string"
+
+    # Create an array to store matching files
+    local matching_files=()
+
+    # Create an associative array to store both filename and CD paths
+    local filenames=()
+    local cd_paths=()
+
+    # Loop through each part of the split string and search for files
+    for part in "${parts[@]}"; do
+        # Use grep with word boundaries to search for each part as a full word
+        matching_files+=($(grep -rl "\<$part\>" "$search_folder"))
+    done
+
+    # Deduplicate the list of matching files
+    matching_files=($(echo "${matching_files[@]}" | tr ' ' '\n' | sort -u))
+
+    # Loop through each matching file
+    for file in "${matching_files[@]}"; do
+        if [[ "$file" == *".sh" ]]; then
+            # Extract the filename without the path and .sh extension
+            filename=$(basename "$file" .sh)
+
+            cd "$search_folder"
+
+            cd_line=$(grep -m 1 "cd " "$filename.sh")
+
+            if [ -n "$cd_line" ]; then
+                # Extract the path from the cd line
+                path=$(echo "$cd_line" | awk -F 'cd ' '{print $2}' | tr -d '"')
+
+                # Store the filename and the path in their respective arrays
+                filenames+=("$filename")
+                cd_paths+=("$path")
+            fi
+        fi
+    done
+
+    # Print the list of filenames without .sh extension and the corresponding path
+    # for ((i=0; i<${#filenames[@]}; i++)); do
+    #     echo "File: ${filenames[i]}, CD Path: ${cd_paths[i]}"
+    # done
+
+    export MYSQL_HOME="$HOME/Library/Application Support/Local/run/$filenames/conf/mysql"
+    export PHPRC="$HOME/Library/Application Support/Local/run/$filenames/conf/php"
+    export WP_CLI_CONFIG_PATH="/Applications/Local.app/Contents/Resources/extraResources/bin/wp-cli/config.yaml"
+    export WP_CLI_DISABLE_AUTO_CHECK_UPDATE=1
+    export PATH="$HOME/Library/Application Support/Local/lightning-services/mysql-8.0.16+6/bin/darwin/bin:$PATH"
+    export PATH="$HOME/Library/Application Support/Local/lightning-services/php-8.1.23+0/bin/darwin/bin:$PATH"
+    export PATH="/Applications/Local.app/Contents/Resources/extraResources/bin/wp-cli/posix:$PATH"
+    export PATH="/Applications/Local.app/Contents/Resources/extraResources/bin/composer/posix:$PATH"
+    export MAGICK_CODER_MODULE_PATH="$HOME/Library/Application Support/Local/lightning-services/php-8.1.23+0/bin/darwin/ImageMagick/modules-Q16/coders"
+
+    cd "$cd_paths"
+    # Update wp-config.php with the proper mysql host
+    sed -i '' "s#define( 'DB_HOST', '.*' )#define( 'DB_HOST', '$HOME/Library/Application Support/Local/run/$filenames/mysql/mysqld.sock' )#" wp-config.php
+
+    cd "$cd_paths/wp-content/themes/$input_string"
+    "./plugins.sh"
+
+    cd "$cd_paths"
+    # Revert wp-config.php change
+    sed -i '' "s#define( 'DB_HOST', '.*' )#define( 'DB_HOST', 'localhost' )#" wp-config.php
+}
+
+search_files "$1"
