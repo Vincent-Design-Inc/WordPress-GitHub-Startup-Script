@@ -47,4 +47,6 @@ This script automates the process of setting up a new theme using our starter wi
 - Added standalone script to install plugins.  This will eventually end up in the spinup script
 
 #### Changed
+- Integrated plugin install function into main script
+
 #### Fixed
