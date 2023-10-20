@@ -44,6 +44,7 @@ This script automates the process of setting up a new theme using our starter wi
 ### 2023-10-20
 #### Added
 - Added step to update `bud.config.js` with the new theme folder as the public path (`app.setPublicPath`)
+- Added standalone script to install plugins.  This will eventually end up in the spinup script
 
 #### Changed
 #### Fixed
