@@ -116,8 +116,25 @@ fi
 mkdir "$folder_name"
 cd "$folder_name"
 
-# Step 2: Clone the GitHub repository
-git clone git@github.com:Vincent-Design-Inc/starter-theme-3.git .
+# Step 2: Set up repository and add starter
+git init
+git fetch --depth=1 -n git@github.com:Vincent-Design-Inc/starter-theme-3.git
+
+# Step 2a: Create a new GitHub repository using GitHub CLI
+gh repo create "Vincent-Design-Inc/$folder_name" --private
+
+echo "---------------------------------------------"
+
+# Step 2b: Add the remote repository
+git remote add origin "git@github.com:Vincent-Design-Inc/$folder_name.git"
+
+echo "---------------------------------------------"
+
+current_date_time=$(date +"%Y-%m-%d %H:%M:%S")
+initial_commit_message="Initial commit - $current_date_time"
+
+# Step 2c: Set up initial commit message
+git commit -m "$initial_commit_message"
 
 echo "---------------------------------------------"
 
@@ -134,35 +151,19 @@ sed -i '' "s/Theme Name:.*/Theme Name: $theme_name/" style.css
 # Update bud.config.js with the Foldere Name
 sed -i '' "s#app.setPublicPath('.*')#app.setPublicPath('/wp-content/themes/$folder_name/public/')#" bud.config.js
 
-# Step 4: Create a new GitHub repository using GitHub CLI
-gh repo create "Vincent-Design-Inc/$folder_name" --private
-
-echo "---------------------------------------------"
-
-# Step 5: Change the remote repository URL
-git remote set-url origin "git@github.com:Vincent-Design-Inc/$folder_name.git"
-
-echo "---------------------------------------------"
-
-# Step 6: Set up development dependencies
+# Step 3a: Set up development dependencies
 composer install
 yarn install
 yarn build
 
 echo "---------------------------------------------"
 
-# Step 7: Perform an initial commit with date and time in the message, and set up repository secrets
-current_date_time=$(date +"%Y-%m-%d %H:%M:%S")
-initial_commit_message="Initial commit - $current_date_time"
-
-# Step 7a: Set up initial commit
-git add .
-git commit -m "$initial_commit_message"
+# Step 4: Perform an initial push to GitHub, and set up repository secrets
 git push -u origin main
 
 echo "---------------------------------------------"
 
-# Step 7b: Set up repository secrets
+# Step 4a: Set up repository secrets
 echo "Setting REMOTE_TARGET to /www/wp-content/themes/$folder_name/"
 gh secret set REMOTE_TARGET --body "/www/wp-content/themes/$folder_name/"
 echo "Adding REMOTE_USER. Set this on GitHub once ready to start deploying"
@@ -172,10 +173,10 @@ gh secret set PHP_VERSION --body "8.1"
 
 echo "---------------------------------------------"
 
-# Step 7c: Install plugins
-echo "Installing plugins"
-cd "$HOME/Local Sites"
-install_plugins "$folder_name"
+# Step 5: Install plugins
+#echo "Installing plugins (cmd: install_plugins($folder_name))"
+#cd "$HOME/Local Sites"
+#install_plugins "$folder_name"
 
 echo "---------------------------------------------"
 
@@ -183,7 +184,7 @@ echo "Setup completed successfully."
 
 echo "---------------------------------------------"
 
-# Step 8: Ask the user if they want to open the project in Visual Studio Code
+# Step 6: Ask the user if they want to open the project in Visual Studio Code
 read -p "Do you want to open the project in Visual Studio Code? (y/n): " open_vscode
 if [ "$open_vscode" == "y" ] || [ "$open_vscode" == "Y" ]; then
     if command -v code &> /dev/null; then

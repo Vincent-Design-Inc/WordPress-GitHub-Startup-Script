@@ -43,6 +43,15 @@ This script automates the process of setting up a new theme using our starter wi
 
 ## Changelog
 
+### 2023-11-21
+#### Added
+
+#### Changed
+- Refactor git init routine to squash starter into single new commit
+- Remove install_plugins call in main script.  This will eventually come back, but there are issues.
+
+#### Fixed
+
 ### 2023-10-20
 #### Added
 - Added step to update `bud.config.js` with the new theme folder as the public path (`app.setPublicPath`)
