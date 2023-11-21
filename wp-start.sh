@@ -75,6 +75,25 @@ install_plugins() {
         fi
     done
 
+    # Debugging: remove the following lines
+    echo "Found the following matching files:"
+    for i in "${matching_files[@]}"; do
+        echo "- $i"
+    done
+    pause
+    echo '---------------------------------------------'
+    echo "Found the following files:"
+    for i in "${filenames[@]}"; do
+        echo "- $i"
+    done
+    pause
+    echo '---------------------------------------------'
+    echo "Found the following paths:"
+    for i in "${cd_paths[@]}"; do
+        echo "- $i"
+    done
+    echo '---------------------------------------------'
+
     export MYSQL_HOME="$HOME/Library/Application Support/Local/run/$filenames/conf/mysql"
     export PHPRC="$HOME/Library/Application Support/Local/run/$filenames/conf/php"
     export WP_CLI_CONFIG_PATH="/Applications/Local.app/Contents/Resources/extraResources/bin/wp-cli/config.yaml"
@@ -134,7 +153,7 @@ current_date_time=$(date +"%Y-%m-%d %H:%M:%S")
 initial_commit_message="Initial commit - $current_date_time"
 
 # Step 2c: Set up initial commit message
-git commit -m "$initial_commit_message"
+git reset --hard $(git commit-tree FETCH_HEAD^{tree} -m "$initial_commit_message")
 
 echo "---------------------------------------------"
 
@@ -174,8 +193,8 @@ gh secret set PHP_VERSION --body "8.1"
 echo "---------------------------------------------"
 
 # Step 5: Install plugins
-#echo "Installing plugins (cmd: install_plugins($folder_name))"
-#cd "$HOME/Local Sites"
+echo "Installing plugins (cmd: install_plugins($folder_name))"
+cd "$HOME/Local Sites"
 #install_plugins "$folder_name"
 
 echo "---------------------------------------------"
